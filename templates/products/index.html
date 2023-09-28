@@ -1,0 +1,163 @@
+{% extends 'products/base.html' %}
+{%load  static%}
+{% load custom_tag %}
+{% block search %}
+<form action="" method="GET">
+    <div class="input-group">
+        {% if s %}
+        <input type="text" class="form-control" value ={{s}} name="search" placeholder="Search by name">
+        {% else %}
+        <input type="text" class="form-control" name="search" placeholder="Search by name">
+        {% endif %}
+        {% comment %} <input type="text" class="form-control" name="search" placeholder="Search for products">   {% endcomment %}
+        <div class="input-group-append">
+            <button type="submit" class="input-group-text bg-transparent text-primary">
+            <span >
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+    {% block carsoule %}
+    {% if pr %}
+        <div class="row px-xl-5 pb-3"> 
+            {% for p in pr %}
+            <div class="col-lg-4 col-md-4 col-sm-4 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <a href="{% url 'detail' p.id %}">
+                        <img class="img-fluid w-100 card-img" src="{{p.image.url}}" alt="">
+                        </a>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{p.name}}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>{{p.price}}</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="{% url 'detail' p.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <div class="container">
+    <div class="row px-xl-5 pb-3">    
+        <div class="col-lg-12 col-md-12 col-sm-12 pb-1"> 
+            <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="height: 410px;">
+                        <img class="img-fluid" src="{% static 'images/carousel-1.jpg' %}" alt="Image">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Fashionable Dress</h3>
+                                <a href="{% url 'shop' %}" class="btn btn-light py-2 px-3">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" style="height: 410px;">
+                        <img class="img-fluid" src="{% static 'images/carousel-2.jpg' %}" alt="Image">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
+                                <a href="{% url 'shop' %}" class="btn btn-light py-2 px-3">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" style="height: 410px;">
+                        <img class="img-fluid" src="{% static 'images/carousel-3.jpg' %}" alt="Image">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Men's Wear</h3>
+                                <a href="{% url 'shop' %}" class="btn btn-light py-2 px-3">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>    
+        </div>
+    </div>
+    {% endif %}
+    {% endblock  %} 
+{% block content %} 
+
+
+{% for message in messages  %}
+<div class="alert {{message.tags}} alert-dismissible" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+    <strong>{{message}}</strong>
+</div>
+{% endfor %}
+    
+    <!-- Categories Start -->
+    <div class="container-fluid pt-5">
+        
+        <div class="row px-xl-5 pb-3">
+            {% for s in section %}
+            <div class="col-lg-4 col-md-6 pb-1">
+                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
+                    <p class="text-right">{{s.products_set.count}} Products</p>
+                    
+                    <a href="{% url 'category' s.id %}" class="cat-img position-relative overflow-hidden mb-3">
+                        <img class="card-img" src="{{s.products_set.all.0.image.url}}" alt="">
+                    </a>
+                    <h5 class="font-weight-semi-bold m-0">{{s.name}}</h5>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Categories End -->
+        
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Just Arrived</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            {% for p in products|slice:"0:8" %}
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <a href="{% url 'detail' p.id %}">
+                        <img class="img-fluid w-100 card-img" src="{{p.image.url}}" alt="">
+                        </a>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{p.name}}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>{{p.price}}</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="{% url 'detail' p.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+{% endblock %}

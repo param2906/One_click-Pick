@@ -1,0 +1,55 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load custom_tag %}
+{% block content %}
+
+<div class="row px-xl-5">
+    <div class="col-lg-12 table-responsive mb-5">
+        <table class="table table-bordered text-center mb-0">
+            <thead class="bg-secondary text-dark">
+                <tr>
+                    <th></th>
+                    <th>product</th>
+                    <th>Size</th>
+                    <th>Colour</th>
+                    <th>Quantity</th>
+                    <th>status</th>
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                {% for oi in orderitem  %}
+                <tr>       
+                    <td class="align-middle"><img src="{{oi.product.image.url}}" alt="" style="width: 50px;"></td>
+                    <td class="align-middle">{{oi.product.name}}</td>
+                    <td class="align-middle">{{oi.size}}</td>
+                    <td class="align-middle">{{oi.colour}}</td>
+                    <td class="align-middle">{{oi.quantity}}</td>
+                        <td class="align-middle">
+                            <form action="" method="POST">
+                                {% csrf_token %}    
+                            
+                            <span>
+                                <select name = "status"  class="form-select" aria-label="Default select example">
+                                    <option {% if oi.status == ' ' %} selected
+                                    {% endif %} selected>Status</option>
+                                    <option {% if oi.status == '25' %} selected
+                                    {% endif %}value="25">Pending</option>
+                                    <option {% if oi.status == '70' %} selected
+                                    {% endif %} value="70">Out for Delivary</option>
+                                    <option {% if oi.status == '100' %} selected
+                                    {% endif %} value="100">Delivered</option>
+                                </select>
+                                <input type="text" value="{{oi.id}}" name="id" hidden>
+                                <input class="btn btn-dark" type="submit" value="Apply">
+                            </span>
+                            </form>
+                        </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {{oi.product.name}}
+
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load custom_tag %}
+{% load widget_tweaks %}
+{% block content %}
+{% if cartitem.count == 0 %}
+    <div class="backgroundimage">
+        
+    </div>
+{% else %}
+<div class="container-fluid pt-5">
+    {% for message in messages  %}
+    <div class="alert {{message.tags}} alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+        <strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+    
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th></th>
+                        <th>Products</th>
+                        <th>Price</th>
+                        <th>Size</th>
+                        <th>Colour</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    {% for c in cartitem %}
+                    <tr>
+                        <td class="align-middle"><img src="{{c.product.image.url}}" alt="" style="width: 50px;"></td>
+                        <td class="align-middle">{{c.product.name}}</td>
+                        <td class="align-middle">Rs.{{c.product.price}}</td>
+                        <td class="align-middle">{{c.size}}</td>
+                        <td class="align-middle">{{c.colour}}</td>
+                        <td class="align-middle">
+                            <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name = "cartitem" value="{{c.id}}">
+                                        <input hidden type="number" name = "remove" value="-1" > 
+                                        <input type="submit" class="btn btn-sm btn-primary" value="-" >
+        
+                                    </form>
+                                
+                                    <input type="text" class="form-control bg-secondary text-center" value="{{c.quantity}}">
+                               
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name = "cartitem" value="{{c.id}}">
+                                        <input type="submit" class="btn btn-sm btn-primary " value="+">
+                                        
+                                    </form>
+                            </div>
+                            
+                        </td>
+                        <td class="align-middle">Rs.{% multiply c.quantity c.product.price %}</td>
+                        <td class="align-middle"><button type = "button" id = "submit"  data-bs-toggle="modal" data-bs-target="#exampleModal{{c.id}}" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                    </tr>
+                    <div class="modal fade" id="exampleModal{{c.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel{{c.id}}">Are you sure Want to Remove item from cart </h1>
+
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" >
+                                    <h3 id="modal_body"></h3>
+                                </div>
+                                <div class="modal-footer">
+                                    <a id="link" href="{% url 'deletecartitem' c.id %}" class="btn btn-danger">Remove</a>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Subtotal</h6>
+                        <h6 class="font-weight-medium">Rs.{{cart.total_price}}</h6>
+                    </div>
+
+                </div>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 class="font-weight-bold">Rs.{{cart.total_price}}</h5>
+                    </div>
+                    <a href="{% url "checkout" cart.id %}" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Cart End -->
+{% endblock %}

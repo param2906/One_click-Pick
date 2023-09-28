@@ -1,0 +1,158 @@
+{% extends 'products/base.html' %}
+{% load custom_tag %}
+{% load widget_tweaks %}
+{% block content %}
+<!-- Shop Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <!-- Shop Sidebar Start -->
+        
+          <div class="col-lg-3 col-md-12">
+              <form action="" method="GET" id="filterform">
+              <!-- Price Start -->
+              <div class="input-group mb-5">
+                {% if s %}
+                <input type="text" class="form-control" id="search" value ={{s}} name="search" placeholder="Search by name">
+                {% else %}
+                <input type="text" class="form-control" id="search"  name="search" placeholder="Search by name">
+                {% endif %}
+                
+                    <div class="input-group-append">
+                       
+                        <button class="btn btn-primary" onclick="finalurl()"  type=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button> 
+                        {% comment %} <i class="bi bi-search" onclick="finalurl()"></i> {% endcomment %}
+                        {% comment %} </span> {% endcomment %}
+                    </div>
+                
+            </div>
+              <div class="border-bottom mb-4 pb-4">
+                  <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
+                  {% render_field category_filter.form.category class="btn shadow-none border d-flex align-items-center justify-content-between text-dark   w-100" %}
+              </div>
+              <div class="border-bottom mb-4 pb-4">
+                <h5 class="font-weight-semi-bold mb-4">Filter by Section</h5>
+                  {% render_field section_filter.form.section class="btn shadow-none border d-flex align-items-center justify-content-between text-dark   w-100" %}
+              </div>
+            <!-- Size Start -->
+              <div class="mb-5">
+                  <h5 class="font-weight-semi-bold mb-4">Filter by size</h5>
+                  
+                  <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <input type="checkbox" class="custom-control-input" {% if 'allsize' in size %} checked {% endif %} value = "allsize" name ="size"  id="size-all">
+                      <label class="custom-control-label" for="size-all">All Size</label>
+                      
+                  </div>
+                  {% for s in sizes  %}
+                  <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <input type="checkbox" class="custom-control-input" {% if s.name in size %} checked {% endif %} name ="size" value = "{{s.name}}"  id="{{s.id}}">
+                      <label class="custom-control-label" for="{{s.id}}">{{s.name}}</label>
+                      
+                  </div>
+                  {% endfor %}
+              </div>
+              <input type="submit" class="btn btn-dark"  value ="Apply">
+              </form>
+          </div>
+          
+            <!-- Size End -->
+        
+        <!-- Shop Sidebar End -->
+  
+  
+        <!-- Shop Product Start -->
+        <div class="col-lg-9 col-md-12">
+            <div class="row pb-3">
+                <div class="col-12 pb-1">
+                    <div id="url"></div>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <form action="" method="GET">
+                            
+                            
+                        </form>
+                    </div>
+                </div>
+                {% for p in page_obj %}
+              <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                  <div class=" card product-item border-0 mb-4">
+                      <div class=" card-header product-img position-relative  bg-transparent border p-0">
+                        <a href="{% url 'detail' p.id %}" >
+                          <img class="card-img" src="{{p.image.url}}" alt="">
+                        </a>  
+                      </div>
+                      <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                          <h6 class="text-truncate mb-3">{{p.name}}</h6>
+                          <div class="d-flex justify-content-center">
+                              <h6>Rs.{{p.price}}</h6>
+                          </div>
+                      </div>
+                      <div class="card-footer d-flex justify-content-between bg-light border">
+                          <a href="{% url 'detail' p.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+              
+
+              <div class="col-12 pb-1">
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mb-3">
+                        <li class="page-item ">
+                            {% if page_obj.has_previous %}
+                        
+                        <a class="page-link" href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span> 
+                            
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% comment %} {% with s = page. %} {% endcomment %}
+                    {% for page in page_obj.paginator.page_range %}
+                    {% if page_obj.number == page %}
+                    <li class="page-item active">
+                        <a class="page-link" href="{% my_url page 'page' request.GET.urlencode %}">
+                            {{page}}</a></li>
+                    {% else %}
+                    <li class="page-item ">
+                        <a class="page-link" href="{% my_url page 'page' request.GET.urlencode %}">
+                            {{page}}</a></li>
+                    {% endif %}  
+                    
+                    {% endfor %}
+                      
+                      
+                      {% comment %} {% endwith %} {% endcomment %}
+                    
+                    {% if page_obj.has_next  %}
+                        <a class="page-link" href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span></a>
+                      </li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+              </div>
+          </div>
+      </div>
+      <!-- Shop Product End -->
+  </div>
+</div>
+<script type="text/javascript">
+    function finalurl() {
+        
+        var url = new URL(window.location.href);
+        console.log(url)
+        s = "&search="
+        s= url.search+s
+        var val = document.getElementById("search").value
+        s= s+val
+        url.search = s.toString();
+        document.getElementById("url").value =  url.search
+      }
+</script>
+<!-- Shop End -->
+
+{% endblock %}

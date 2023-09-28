@@ -1,0 +1,116 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+        <div id="success"></div>
+        {% for message in messages  %}
+        <div class="alert {{message.tags}} alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            <strong>{{message}}</strong>
+        </div>
+        {% endfor %}
+        <form  action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            {% if field.errors %}
+            {{field.label}}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+                <strong>{{field.errors}}</strong>
+            </div>  
+            {% endif %}
+            {% endfor %}
+            <div class="row">
+                <div class="col-md-3 col-lg-3">
+                    <div class="container border border-5">
+                        <img src="{{request.user.profile.url}}" class="h-100 w-100"  alt="">
+                        {{form.profile.label}}
+                        {% render_field form.profile class="form-control mb-3" required="true" %}
+                        
+                    </div>
+                    <a href="{% url 'resetpassword' %}" class="btn btn-primary mt-3">Change Password</a>
+                </div>
+                <div class="col-md-8 col-lg-8">
+                    {{form.first_name.label}}
+                    {% render_field form.first_name class="form-control mb-3" required="true" %}
+                    {{form.last_name.label}}
+                    {% render_field form.last_name class="form-control mb-3" required="true" %}
+                    <label >Email</label>
+                    <input type="text"  value="{{request.user}}" disabled="true" class="form-control mb-3" >
+                    {{form.phone.label}}
+                    {% render_field form.phone class="form-control mb-3" required="true" %}
+                    {{form.address.label}}
+                    {% render_field form.address class="form-control mb-3" required="true" %}
+
+                </div>
+            </div>
+            <input class="btn btn-primary py-2 px-4" type="submit" name="submit">
+        </form>
+
+    <!-- Button trigger modal -->
+    
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalsize" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <label for="" class="">Size</label>
+                <input type="text" class="form-control" name="addsize" required>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalcolor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <label for="" class="">Color</label>
+                <input type="text" class="form-control" name="addcolor" required>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalcategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <label for="" class="">Category</label>
+                    <input type="text" class="form-control" name="addcategory" required>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+     </div>
+</div>
+{% endblock %}

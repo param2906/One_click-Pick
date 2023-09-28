@@ -1,0 +1,25 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% block content %}
+      
+      <header>OTP verification</header>
+          {% if messages %}
+          {% for message in messages  %}
+          <div class="alert {{message.tags}} alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            <strong>{{message}}</strong>
+          </div>
+          {% endfor %}
+          {% endif %}
+        <form action="{% url 'registrationOtp' %}" method="POST">
+          {% csrf_token %}
+          
+           <input type="hidden" name="email" value="{{email}}">
+           {% comment %} <input type="hidden" name="realotp" value="{{otp}}"> {% endcomment %}
+           <input type="number" placeholder="OTP", name="otp" >
+           <input type="submit" class="button" value="submit" name="submit">
+           <input type="submit" class="btn btn-danger btn-sm" name="resendotp" value="resendotp">
+        </form>
+        
+
+{% endblock %}

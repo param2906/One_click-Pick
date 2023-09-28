@@ -1,0 +1,99 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load custom_tag %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+    <h1 class="mb-4 display-5 font-weight-semi-bold" >{{name}}</h1>
+    
+            <div class="contact-form">
+                <div id="success"></div>
+                {% for message in messages  %}
+                <div class="alert {{message.tags}} alert-dismissible" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+                    <strong>{{message}}</strong>
+                </div>
+                {% endfor %}
+                    <div class="row">
+                        <div class="col-md-5 col-lg-5">
+                            {{form.first_name.label}}
+                            {% render_field form.first_name disabled="true" class="form-control mb-3" required="true" %}         
+                            {{form.last_name.label}}
+                            {% render_field form.last_name  class="form-control mb-3" disabled="true" required="true" %}
+                            {{form.phone.label}}
+                            {% render_field form.phone class="form-control mb-3" disabled="true" required="true" %}
+                            {{form.email.label}}
+                            {% render_field form.email class="form-control mb-3" disabled="true" required="true" %}
+                            {{form.address1.label}}
+                            {% render_field form.address1 class="form-control mb-3" disabled="true" required="true" %}
+                            {{form.address2.label}}
+                            {% render_field form.address2 class="form-control mb-3" disabled="true" required="true" %}
+                            <input type="text" name="created_by" value="{{request.user}}" class="form-control mb-3" required="" data-validation-required-message="Please enter your name" disabled="True" id="id_created_by">
+                            {% comment %} {{request.user.cart_set.all}} {% endcomment %}
+                            <a href="{% url 'updatedetails' cart.id %}" class="btn btn-primary">update order details</a>
+                        </div>
+                        <div class="col-md-7 col-lg-7">
+                            <table class="table table-bordered text-center mb-0">
+                                <tbody class="align-middle">
+                                {% for oi in orderitem %}
+                                    <tr>
+                                        <td class="align-middle"><img src="{{oi.product.image.url}}" alt="" style="width: 50px;"></td>
+                                        <td class="align-middle">{{oi.product.name}}</td>
+                                        <td class="align-middle">Rs.{{oi.product.price}}</td>
+                                        <td class="align-middle">{{oi.size}}</td>
+                                        <td class="align-middle">Color:  <span style = "height: 16px;
+                                            width: 16px;
+                                            border-radius: 50%;
+                                            background-color: {{oi.colour}};
+                                            display: inline-block;
+                                            "></span></td>
+                                        <td class="align-middle">Qty: {{oi.quantity}}</td>
+                                    
+                                {% endfor %}
+                                </tbody>
+                            
+                            </table>
+                            <div class="card border-secondary mt-5">
+                                <div class="card-header bg-secondary border-0">
+                                    <h4 class="font-weight-semi-bold m-0">Order Summary</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3 pt-1">
+                                        <h6 class="font-weight-medium">Subtotal</h6>
+                                        <h6 class="font-weight-medium">Rs.{{order.total_price}}</h6>
+                                    </div>
+                
+                                </div>
+                                <div class="card-footer border-secondary bg-transparent">
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <h5 class="font-weight-bold">Total</h5>
+                                        <h5 class="font-weight-bold">Rs.{{order.total_price}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <form action="{% url 'success' order.id %}" method="POST">
+                                {% csrf_token %}
+                                <script
+                                    src="https://checkout.razorpay.com/v1/checkout.js"
+                                    data-key="rzp_test_WYD2T6ysRmQIjA" 
+                                    data-amount="{% multiply order.total_price 100 %}" 
+                                    data-currency="INR"
+                                    data-order_id="{{payment.id}}"
+                                    data-buttontext="Pay"
+                                    data-name="One click pick"
+                                    data-description=""
+                                    data-contact = "{{order.phone}}"
+                                    data-image="https://example.com/your_logo.jpg"
+                                    data-prefill.name="{{order.user.name}}"
+                                    data-prefill.email="{{order.user}}"
+                                    data-theme.color="#F37254"
+                                ></script>
+                                {% comment %} <input type="submit" for="#pay" custom="Hidden Element" name="hidden"/> {% endcomment %}
+
+                            </form>
+                        </div>
+                        
+                    </div>     
+            </div>
+</div>
+{% endblock %}

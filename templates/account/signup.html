@@ -1,0 +1,35 @@
+{% extends "account/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% comment %} {% load crispy_forms_filters %} {% endcomment %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+      <header>Sign up</header>
+        <form  method="post" >
+          {% csrf_token %}
+          {% for field in form %}
+          {% if field.errors %}
+          <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            <strong>{{field.errors}}</strong>
+          </div>
+          {% endif %}
+          {{field.label}}
+          {{field}}
+          {% endfor %}
+          {% comment %} {% if forms.errors %}
+          {{forms.errors}}
+          {% endif %} {% endcomment %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <input type="submit" class="button" value="sign up">
+        </form>
+        
+        <span class="signup">Already have an account?
+         <a href="{% url 'customer_login'%}">login</a>
+        </span>
+{% endblock %}

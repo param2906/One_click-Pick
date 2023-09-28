@@ -1,0 +1,71 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load custom_tag %}
+{% block content %}
+
+<div class="container">
+    {% for o in order  %}       
+    <div class="container border border-5 rounded mt-5 mb-4 shadow ">
+        
+        <h3 class="mt-4">Order id : {{o.id}}</h3>
+        <br>
+        <div class="border-bottom border-dark"></div>
+        <br>
+                {% for oi in orderitem  %}
+                    {% if oi.order.id == o.id %}
+                    <div class="row px-xl-5">
+                        <div class="col-lg-4 col-md-4">
+                        <img src="{{oi.product.image.url}}" class="orderimage" alt=""> 
+                        </div>
+                        <div class="col-lg-5 col-md-5">
+                            <h4>{{oi.product.name}}</h4>
+                            <p><b>Size: {{oi.size}}</b></p>
+                            <p>Color: <span style = "height: 16px;
+                                width: 16px;
+                                border-radius: 50%;
+                                background-color: {{oi.colour}};
+                                display: inline-block;
+                                "></span>
+                            {{oi.colour}}</p>
+                            <p><b>Qty: {{oi.quantity}}</b></p>
+                            
+                            <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary" style="width: {{oi.status}}%"></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <p>Pending</p>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <p>Out for Delivary</p>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <p>Delivered</p>
+                                </div>
+                              </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <h3>Price:{% multiply oi.quantity oi.product.price %}</h3>
+                        </div>
+                    </div>
+                    <br>
+                    <hr>
+                    {% endif %}
+                    
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 bg-primary">
+                            <p></p>
+                        </div>
+                        <div class="col-lg-4 col-md-4 bg-primary">
+                            <h2 class="text-light">Total  </h2>
+                            <h4 class="text-light">:Rs.{{o.total_price}}</h4>
+                        </div>
+                    </div>
+                
+            
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
